@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "roles": {
+    "implementer": {
+      "name": "Implementer",
+      "purpose": "Writes production code within allowed_paths to satisfy the mission objective and acceptance criteria.",
+      "scope_mode": "write_allowed",
+      "write_paths_key": "allowed_paths",
+      "bash_policy": "denied",
+      "approved_commands_key": null,
+      "blind_from": [],
+      "review_md_visibility": false,
+      "result_required_fields": [
+        "role",
+        "summary",
+        "status",
+        "changed_paths",
+        "artifacts",
+        "tests_run"
+      ],
+      "result_status_values": [
+        "complete",
+        "blocked"
+      ],
+      "supports_parallel_phase": false,
+      "default_enabled": true,
+      "phase": "implement",
+      "host_support": {
+        "claude_code": "full",
+        "copilot_cli": "full",
+        "codex_cli": "full"
+      }
+    },
+    "test-writer": {
+      "name": "Test Writer",
+      "purpose": "Creates and modifies test files within test_paths to cover the implementation.",
+      "scope_mode": "write_test",
+      "write_paths_key": "test_paths",
+      "bash_policy": "denied",
+      "approved_commands_key": null,
+      "blind_from": [],
+      "review_md_visibility": false,
+      "result_required_fields": [
+        "role",
+        "summary",
+        "status",
+        "test_files_created",
+        "coverage_targets",
+        "test_count",
+        "edge_cases_covered"
+      ],
+      "result_status_values": [
+        "complete",
+        "blocked"
+      ],
+      "supports_parallel_phase": false,
+      "default_enabled": true,
+      "phase": "test",
+      "host_support": {
+        "claude_code": "full",
+        "copilot_cli": "full",
+        "codex_cli": "full"
+      }
+    },
+    "docs": {
+      "name": "Documentation Writer",
+      "purpose": "Creates and updates documentation files within doc_paths.",
+      "scope_mode": "write_doc",
+      "write_paths_key": "doc_paths",
+      "bash_policy": "denied",
+      "approved_commands_key": null,
+      "blind_from": [],
+      "review_md_visibility": false,
+      "result_required_fields": [
+        "role",
+        "summary",
+        "status",
+        "docs_updated",
+        "docs_created"
+      ],
+      "result_status_values": [
+        "complete",
+        "blocked"
+      ],
+      "supports_parallel_phase": true,
+      "default_enabled": true,
+      "phase": "docs",
+      "host_support": {
+        "claude_code": "full",
+        "copilot_cli": "full",
+        "codex_cli": "full"
+      }
+    },
+    "skeptic": {
+      "name": "Skeptic",
+      "purpose": "Blind adversarial code review without seeing implementer or test-writer output.",
+      "scope_mode": "read_only",
+      "write_paths_key": null,
+      "bash_policy": "read_only",
+      "approved_commands_key": null,
+      "blind_from": [
+        "implementer",
+        "test-writer"
+      ],
+      "review_md_visibility": true,
+      "result_required_fields": [
+        "role",
+        "summary",
+        "recommendation",
+        "findings"
+      ],
+      "result_status_values": [
+        "approve",
+        "needs_changes",
+        "abort"
+      ],
+      "supports_parallel_phase": true,
+      "default_enabled": true,
+      "phase": "audit",
+      "host_support": {
+        "claude_code": "full",
+        "copilot_cli": "full",
+        "codex_cli": "full"
+      }
+    },
+    "security": {
+      "name": "Security Reviewer",
+      "purpose": "Audits code for auth bypass, injection, and secrets exposure.",
+      "scope_mode": "read_only",
+      "write_paths_key": null,
+      "bash_policy": "read_only_plus_approved",
+      "approved_commands_key": "security_scan_commands",
+      "blind_from": [],
+      "review_md_visibility": true,
+      "result_required_fields": [
+        "role",
+        "summary",
+        "recommendation",
+        "findings",
+        "scan_commands_run"
+      ],
+      "result_status_values": [
+        "approve",
+        "needs_changes",
+        "abort"
+      ],
+      "supports_parallel_phase": true,
+      "default_enabled": true,
+      "phase": "audit",
+      "host_support": {
+        "claude_code": "full",
+        "copilot_cli": "degraded",
+        "codex_cli": "degraded"
+      }
+    },
+    "performance": {
+      "name": "Performance Reviewer",
+      "purpose": "Identifies algorithmic complexity issues, N+1 queries, and memory leaks.",
+      "scope_mode": "read_only",
+      "write_paths_key": null,
+      "bash_policy": "read_only_plus_approved",
+      "approved_commands_key": "benchmark_commands",
+      "blind_from": [],
+      "review_md_visibility": false,
+      "result_required_fields": [
+        "role",
+        "summary",
+        "recommendation",
+        "findings",
+        "benchmarks_run"
+      ],
+      "result_status_values": [
+        "approve",
+        "needs_changes",
+        "abort"
+      ],
+      "supports_parallel_phase": true,
+      "default_enabled": true,
+      "phase": "audit",
+      "host_support": {
+        "claude_code": "full",
+        "copilot_cli": "degraded",
+        "codex_cli": "degraded"
+      }
+    },
+    "accessibility": {
+      "name": "Accessibility Reviewer",
+      "purpose": "Audits UI code for WCAG compliance, ARIA attributes, and keyboard navigation.",
+      "scope_mode": "read_only",
+      "write_paths_key": null,
+      "bash_policy": "read_only_plus_approved",
+      "approved_commands_key": "a11y_commands",
+      "blind_from": [],
+      "review_md_visibility": false,
+      "result_required_fields": [
+        "role",
+        "summary",
+        "recommendation",
+        "findings",
+        "a11y_commands_run"
+      ],
+      "result_status_values": [
+        "approve",
+        "needs_changes",
+        "abort"
+      ],
+      "supports_parallel_phase": true,
+      "default_enabled": true,
+      "phase": "audit",
+      "host_support": {
+        "claude_code": "full",
+        "copilot_cli": "degraded",
+        "codex_cli": "degraded"
+      }
+    },
+    "verifier": {
+      "name": "Verifier",
+      "purpose": "Validates that every acceptance criterion is met with evidence.",
+      "scope_mode": "read_only",
+      "write_paths_key": null,
+      "bash_policy": "read_only_plus_approved",
+      "approved_commands_key": "verification_commands",
+      "blind_from": [],
+      "review_md_visibility": true,
+      "result_required_fields": [
+        "role",
+        "summary",
+        "recommendation",
+        "criteria_results"
+      ],
+      "result_status_values": [
+        "pass",
+        "fail",
+        "needs_changes"
+      ],
+      "supports_parallel_phase": false,
+      "default_enabled": true,
+      "phase": "verify",
+      "host_support": {
+        "claude_code": "full",
+        "copilot_cli": "degraded",
+        "codex_cli": "experimental"
+      }
+    }
+  }
+}
